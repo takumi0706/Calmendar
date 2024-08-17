@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button"
+
 export default function Home() {
   return (
-      <p className="font-serif text-green-600" >
-        Hello Auth!
-      </p>
+      <Button size="lg">
+          Click me
+      </Button>
   );
 }
