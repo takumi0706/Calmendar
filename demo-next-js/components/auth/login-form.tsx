@@ -4,8 +4,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { input} from "zod";
-import { LoginSchema} from "@/schemas";
+import { LoginSchema } from "@/schemas";
 import {
     Form,
     FormControl,
@@ -20,8 +19,12 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {FormError} from "@/components/form-error";
 import {FormSuccess} from "@/components/form-success";
+import {login} from "@/actions/login";
+import {useTransition} from "react";
 
 export const LoginForm = () => {
+    const [isPending, startTransition] = useTransition();
+
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
@@ -31,8 +34,10 @@ export const LoginForm = () => {
     });
 
     const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-        console.log(values);
-    }
+        startTransition(() => {
+        login(values);
+        });
+    };
 
 
     return (
@@ -57,6 +62,7 @@ export const LoginForm = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             placeholder={"example@mail.com"}
                                             type={"email"}
                                         />
@@ -74,6 +80,7 @@ export const LoginForm = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             placeholder={"********"}
                                             type={"password"}
                                         />
@@ -86,6 +93,7 @@ export const LoginForm = () => {
                     <FormError message={""} />
                     <FormSuccess message={""} />
                     <Button
+                        disabled={isPending}
                         type={"submit"}
                         className={"w-full"}>
                         Login
