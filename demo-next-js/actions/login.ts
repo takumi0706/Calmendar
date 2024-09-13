@@ -1,5 +1,17 @@
 "use server";
+import * as z from "zod";
 
-export const login = async (values: any) => {
-    console.log(values);
+import {LoginSchema} from "@/schemas";
+import {RegisterSchema} from "@/schemas";
+export const login = async (values: z.infer<typeof LoginSchema>) => {
+    const validatedFields = LoginSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        return { error: "Invalid email or password" };
+    }
+
+    return { success: "Email sent!" };
 };
+
+
+
