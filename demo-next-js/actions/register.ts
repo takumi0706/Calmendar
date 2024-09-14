@@ -1,7 +1,7 @@
 "use server";
 
 import * as z from "zod";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 
 import { db } from "@/lib/db";
 import {RegisterSchema} from "@/schemas";
@@ -16,8 +16,8 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     const { email, password, name } = validatedFields.data;
 
     const saltRounds = 10;
-    const salt = await bcrypt. genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const salt = await bcryptjs. genSalt(saltRounds);
+    const hashedPassword = await bcryptjs.hash(password, salt);
 
     const existingUser = await getUserByEmail(email)
 
