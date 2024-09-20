@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/demo-next-js.iml" filepath="$PROJECT_DIR$/.idea/demo-next-js.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Calmendar.iml" filepath="$PROJECT_DIR$/.idea/Calmendar.iml" />
     </modules>
   </component>
 </project>
