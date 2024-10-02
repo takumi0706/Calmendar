@@ -6,6 +6,7 @@ import authConfig from "./auth.config"
 import {getUserById} from "@/data/user";
 import {UserRole} from "@prisma/client";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import {getAccountByUserId} from "@/data/accout";
 
 //for Edge compatibility
 export const {
@@ -78,9 +79,8 @@ export const {
 
             if(session.user){
                 session.user.name = token.name;
-                if (token.email) {
-                    session.user.email = token.email;
-                }
+                session.user.email = token.email ?? session.user.email;
+                session.user.isOAuth = token.isOAuth as boolean;
             }
 
             return session;
@@ -96,6 +96,11 @@ export const {
                 return token;
             }
 
+            const existingAccount = await getAccountByUserId(
+                existingUser.id
+            );
+
+            token.isOAuth = !!existingAccount;
             token.name = existingUser.name;
             token.email = existingUser.email;
             token.role = existingUser.role;
@@ -107,4 +112,4 @@ export const {
     adapter: PrismaAdapter(db),
     session: { strategy: "jwt" },
     ...authConfig
-})
+});
