@@ -25,12 +25,6 @@ export const settings = async (
         return { error: "Unauthorized" };
     }
 
-    if(user.isOAuth){
-        values.email = undefined;
-        values.password = undefined;
-        values.newPassword = undefined;
-        values.isTwoFactorEnabled = undefined;
-    }
 
     if (values.email && values.email !== user.email) {
         const existingUser = await getUserByEmail(values.email);

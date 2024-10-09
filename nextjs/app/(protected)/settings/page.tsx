@@ -8,7 +8,7 @@ import {settings} from "@/actions/settings";
 import {useState, useTransition} from "react";
 import {useSession} from "next-auth/react";
 import {useForm} from "react-hook-form";
-import {SettingsSchema} from "@/schemas";
+import {NewPasswordSchema, SettingsSchema} from "@/schemas";
 import {
     Select,
     SelectContent,
@@ -32,6 +32,7 @@ import {FormError} from "@/components/form-error";
 import {FormSuccess} from "@/components/form-success";
 import {UserRole} from "@prisma/client";
 import {Switch} from "@/components/ui/switch";
+import {settingsNewPassword} from "@/actions/settings-new-password";
 
 const SettingPage = () => {
     const user = useCurrentUser();
@@ -64,6 +65,7 @@ const SettingPage = () => {
                     if (data.success) {
                         update();
                         setSuccess(data.success);
+                        setTimeout(() => window.location.reload(), 1000); // 1000ミリ秒（1秒）遅延
                     }
                 })
             .catch(() => {
@@ -71,6 +73,87 @@ const SettingPage = () => {
             })
         });
     }
+
+    const setPasswordForm = useForm<z.infer<typeof NewPasswordSchema>>({
+        resolver: zodResolver(NewPasswordSchema),
+        defaultValues: {
+            password: "",
+        },
+    });
+
+    const onSubmitPassword = (value: z.infer<typeof NewPasswordSchema>) => {
+        setError("");
+        setSuccess("");
+
+        startTransition(() => {
+            settingsNewPassword(value)
+                .then((data) => {
+                    if (data.error){
+                        setError(data.error);
+                    }
+
+                    if (data.success) {
+                        update();
+                        setSuccess(data.success);
+                        // window.location.reload();
+                    }
+                })
+                .catch(() => {
+                    setError("Something went wrong!");
+                })
+        });
+    };
+
+    if (user?.isPasswordEmpty){
+        return (
+            <Card className={"w-[600px]"}>
+                <CardHeader>
+                    <p className={"text-2xl font-semibold text-center"}>
+                        ⚙️ Settings
+                    </p>
+                </CardHeader>
+                <CardContent>
+                    <Form {...setPasswordForm}>
+                        <form
+                            className={"space-y-6"}
+                            onSubmit={setPasswordForm.handleSubmit(onSubmitPassword)}
+                        >
+                            <div className={"space-y-4"}>
+                                <FormField
+                                    control={setPasswordForm.control}
+                                    name={"password"}
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel>Password</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    placeholder="********"
+                                                    type="password"
+                                                    disabled={isPending}
+                                                    autoComplete={"new-password"}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            <FormError message={error} />
+                            <FormSuccess message={success} />
+                            <Button
+                                type={"submit"}
+                                disabled={isPending}
+                            >
+                                Save
+                            </Button>
+                        </form>
+                    </Form>
+                </CardContent>
+            </Card>
+        );
+    }
+
   return (
       <Card className={"w-[600px]"}>
         <CardHeader>
@@ -96,14 +179,13 @@ const SettingPage = () => {
                                             {...field}
                                             placeholder="Takumi Oyamada"
                                             disabled={isPending}
+                                            autoComplete={"name"}
                                         />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        {user?.isOAuth === false && (
-                            <>
                                 <FormField
                                 control={form.control}
                                 name={"email"}
@@ -116,6 +198,7 @@ const SettingPage = () => {
                                                 placeholder="example@example.com"
                                                 type="email"
                                                 disabled={isPending}
+                                                autoComplete={"username"}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -152,14 +235,13 @@ const SettingPage = () => {
                                                 placeholder="********"
                                                 type="password"
                                                 disabled={isPending}
+                                                autoComplete={"new-password"}
                                             />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                        </>
-                    )}
                         <FormField
                             control={form.control}
                             name={"role"}
@@ -189,7 +271,6 @@ const SettingPage = () => {
                                 </FormItem>
                             )}
                         />
-                        {user?.isOAuth === false && (
                         <FormField
                             control={form.control}
                             name={"isTwoFactorEnabled"}
@@ -211,7 +292,6 @@ const SettingPage = () => {
                                 </FormItem>
                             )}
                         />
-                    )}
                     </div>
                     <FormError message={error} />
                     <FormSuccess message={success} />

@@ -7,6 +7,8 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {useCurrentUser} from "@/hooks/use-current-user";
 import {LogoutButton} from "@/components/auth/logout-button";
+import {SettingsButton} from "@/components/auth/settings-button";
+import {SettingsIcon} from "lucide-react";
 
 export const UserButton  = () => {
     const user = useCurrentUser();
@@ -22,6 +24,12 @@ export const UserButton  = () => {
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className={"w-40"} align={"end"}>
+                <SettingsButton>
+                    <DropdownMenuItem>
+                        <SettingsIcon className={"w-4 h-4 mr-2"} />
+                        Settings
+                    </DropdownMenuItem>
+                </SettingsButton>
                 <LogoutButton>
                     <DropdownMenuItem>
                         <ExitIcon className={"w-4 h-4 mr-2"} />
