@@ -77,6 +77,7 @@ export const {
                 session.user.name = token.name;
                 session.user.email = token.email ?? session.user.email;
                 session.user.isOAuth = token.isOAuth as boolean;
+                session.user.isPasswordEmpty = token.isPasswordEmpty as boolean;
             }
 
             return session;
@@ -97,6 +98,7 @@ export const {
             );
 
             token.isOAuth = !!existingAccount;
+            token.isPasswordEmpty = !existingUser.password;
             token.name = existingUser.name;
             token.email = existingUser.email;
             token.role = existingUser.role;
