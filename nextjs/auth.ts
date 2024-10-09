@@ -47,10 +47,6 @@ export const {
             if (existingUser.isTwoFactorEnabled) {
                 const twoFactorTokenConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
 
-                console.log({
-                    twoFactorTokenConfirmation
-                });
-
                 if (!twoFactorTokenConfirmation) {
                     return false;
                 }
