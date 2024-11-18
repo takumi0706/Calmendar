@@ -1,0 +1,9 @@
+services:
+  nextjs:
+    build:
+      context: nextjs
+    ports:
+      - 3000:3000
+    volumes:
+      - ./nextjs:/nextjs
+    command: npm run dev
