@@ -63,3 +63,7 @@ export const RegisterSchema = z.object({
         message: "Name is required"
     }),
 });
+
+export const GoogleCalendarSchema = z.object({
+
+});

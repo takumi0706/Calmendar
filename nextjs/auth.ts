@@ -80,7 +80,14 @@ export const {
                 session.user.isPasswordEmpty = token.isPasswordEmpty as boolean;
             }
 
-            return session;
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    accessToken: token.accessToken,
+                    refreshToken: token.refreshToken,
+                },
+            };
         },
         async jwt({ token }) {
             if (!token.sub) {
@@ -97,12 +104,20 @@ export const {
                 existingUser.id
             );
 
+            if (!existingAccount) {
+                return token;
+            }
+
             token.isOAuth = !!existingAccount;
             token.isPasswordEmpty = !existingUser.password;
             token.name = existingUser.name;
             token.email = existingUser.email;
             token.role = existingUser.role;
             token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+
+            // OAuth(Google) accounts
+            token.accessToken = existingAccount.access_token;
+            token.refreshToken = existingAccount.refresh_token;
 
             return token;
         }

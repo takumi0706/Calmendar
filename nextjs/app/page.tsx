@@ -19,15 +19,17 @@ export default function Home() {
                   "text-6xl font-semibold text-white drop-shadow-mdh",
                   font.className
               )}>
-                  🔏Auth
+                  🗓️ Calmendar
               </h1>
               <p className="text-white text-lg">
-                  A simple authentication service.
+                  Your smart and reliable calendar assistant, making scheduling a breeze.
               </p>
           </div>
           <div>
               <LoginButton mode={"modal"} asChild>
-                  <Button variant={"secondary"}
+                  <Button
+                        className={"m-2"}
+                      variant={"secondary"}
                           size={"lg"}>
                       Sign in
                   </Button>
