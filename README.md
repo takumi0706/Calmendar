@@ -4,7 +4,7 @@
 
 ## 開発状況
 
-現在はNext.jsを理解するためにログイン画面を作りつつ、ReactとNext.jsの練習をしています。
+ログイン、認証系は完了しカレンダー、AIチャット部分を作成中
 
 ## プロジェクトの概要
 
@@ -15,18 +15,15 @@
 - **スタイリング**: Tailwind CSS
 - **フレームワーク**: Next.js
 - **ORM**: Prisma
-- **データベース**: Neon
+- **データベース**: Neon(PostgreSQL)
 - **認証**: Auth.js
+- **コンテナ**: Docker
+- **デプロイ**: Vecerl
 
 ## セットアップ
 
 開発サーバーを起動するには、以下のコマンドを実行してください：
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up
+```
