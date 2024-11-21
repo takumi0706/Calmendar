@@ -6,6 +6,7 @@
 export const publicRoutes = [
     "/",
     "/auth/new-verification",
+    //todo: Delete this route later.
     "/test",
 ];
 
